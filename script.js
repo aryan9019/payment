@@ -117,7 +117,7 @@ function openUPILink(prefix) {
     const enteredAmount = amountInput.value;
     const enteredNote = noteInput.value || "Payment";
 
-    const basePaymentLink = `pay?pa=aryan9356@ybl&am=${enteredAmount}&tn=${encodeURIComponent(enteredNote)}&pn=${encodeURIComponent("Siddhivinayak Tidake")}`;
+    const basePaymentLink = `pay?pa=9307865271@naviaxis&am=${enteredAmount}&tn=${encodeURIComponent(enteredNote)}&pn=${encodeURIComponent("Aditya Laxman Bhole")}`;
     const fullLink = `${prefix}${basePaymentLink}`;
 
     window.location.href = fullLink;
