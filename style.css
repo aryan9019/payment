@@ -35,6 +35,8 @@ body {
     max-width: 420px;
     padding: 20px;
     box-sizing: border-box;
+    position: relative;
+    z-index: 1;
 }
 
 /* Header Profile */
@@ -272,9 +274,6 @@ button:active {
     height: auto;
 }
 
-/* Utilities */
-.hidden { display: none; }
-
 /* Loading Overlay */
 .loading-overlay {
     position: fixed;
@@ -303,4 +302,9 @@ button:active {
     .app-grid {
         grid-template-columns: repeat(3, 1fr);
     }
+}
+
+/* Utilities - MOVED TO BOTTOM AND ADDED IMPORTANT */
+.hidden { 
+    display: none !important; 
 }
