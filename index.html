@@ -3,251 +3,131 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Form</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        /* Styles for the payment form */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(to bottom right, #4b0082, #000);
-            color: #aaa;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        form {
-            max-width: 300px;
-            padding: 35px;
-            background-color: rgba(0, 0, 0, 0.6);
-            border-radius: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-        }
-
-        h2 {
-            text-align: center;
-            color: #fff;
-            margin-bottom: 20px;
-        }
-
-        .recipient-details {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .recipient-details p {
-            margin: 0;
-            padding: 0;
-        }
-
-        .verified-mark {
-            color: green;
-        }
-
-        label {
-            font-weight: bold;
-            color: #ddd;
-            margin-bottom: 8px;
-        }
-
-        input[type="text"],
-        input[type="number"],
-        textarea {
-            width: calc(100% - 20px);
-            padding: 12px;
-            border: 1px solid #444;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            transition: border-color 0.3s ease;
-            background-color: rgba(0,0,0,0);
-            color: #fff;
-        }
-
-        input[type="text"]:focus,
-        input[type="number"]:focus,
-        textarea:focus {
-            border-color: #007bff;
-        }
-
-        button {
-            background-color: transparent; /* Transparent background */
-            color: #007bff; /* Text color */
-            border: 1px solid #007bff; /* Border color */
-            border-radius: 15px;
-            padding: 12px 20px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease; /* Transition effect for color changes */
-            margin-right: 10px;
-        }
-
-        button:hover {
-            background-color: #007bff; /* Background color on hover */
-            color: #fff; /* Text color on hover */
-            border-color: #0056b3; /* Border color on hover */
-        }
-
-        /* Adjusted button color for hover state */
-        button:hover {
-            background-color: #0056b3; /* Background color on hover */
-            border-color: #0056b3; /* Border color on hover */
-        }
-
-        /* Styles for the QR code popup modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-	    .modal-content {
-	    background-color: rgba(0, 0, 0, 0.5); /* Match background color and adjust opacity */
-	    margin: 15% auto;
-	    padding: 20px;
-	    border: 1px solid #888;
-	    width: 290px;
-	    border-radius: 20px;
-	    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-	    text-align: center;
-	    color: #fff; /* Text color */
-}
-
-        .modal-close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .modal-close:hover,
-        .modal-close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        #paymentQRCode {
-            max-width: 100%;
-            height: auto;
-            margin: 0 auto;
-            display: block;
-        }
-
-        .amount {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #fff;
-        }
-    </style>
+    <title>Payment Portal</title>
+    <meta property="og:title" content="Make a Payment to Aryan">
+    <meta property="og:description" content="Secure payment gateway to Aryan a.k.a. Siddhivinayak Balaji Tidake.">
+    <meta name="theme-color" content="#6b2c91">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css" />
 </head>
 <body>
-    <form id="paymentForm">
-        <div class="recipient-details">
-            <p>You are Paying to - Tidake Siddhivinayak Balaji <i class="fas fa-check-circle verified-mark"></i></p>
+
+    <div class="background-animate"></div>
+
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>Processing...</p>
         </div>
-        <h2>Make a Payment</h2>
-        <label for="name">Name:</label>
-        <p></p>
-        <input type="text" id="name" name="name" placeholder="Enter your name" required>
- <p></p>
-  <p></p>
-        <label for="amountToPay">Amount to Pay:</label>
-         <p></p>
-        <input type="number" id="amountToPay" name="amountToPay" placeholder="Enter amount" required>
- <p></p>
-  <p></p>
-        <label for="note">Note:</label>
-         <p></p>
-        <textarea id="note" name="note" placeholder="Enter a note" required></textarea>
-<div style="text-align: center;">
-        <button type="button" style="width: 100%;" id="payNowButton"><i class="fas fa-money-bill-wave"></i><h> </h>Pay via UPI</button>
-         <p></p>
-        <button type="button" style="width: 100%;" id="showQRButton"><i class="fas fa-qrcode"></i> <h> </h> Show QR Code</button>
-</div>
-        <!-- The modal popup for displaying the QR code -->
-        <div id="qrCodeModal" class="modal">
-            <div class="modal-content">
-                <span class="modal-close">&times;</span>
-                <h2>Scan QR Code with Any UPI app</h2>
-                <img id="paymentQRCode" src="" alt="Payment QR Code">
-                <div class="amount" id="paymentAmount"></div>
+    </div>
+
+    <div class="container">
+        <div class="profile-header">
+            <div class="avatar">
+                <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="profile-info">
+                <p class="small-text">Paying to</p>
+                <h3>Tidake Siddhivinayak Balaji <i class="fas fa-check-circle verified-mark"></i></h3>
+                <p class="upi-id">aryan9356@ybl</p>
             </div>
         </div>
-    </form>
 
-    <script>
-        const nameInput = document.getElementById('name');
-        const amountInput = document.getElementById('amountToPay');
-        const noteInput = document.getElementById('note');
-        const payNowButton = document.getElementById('payNowButton');
-        const showQRButton = document.getElementById('showQRButton');
-        const qrCodeModal = document.getElementById('qrCodeModal');
-        const modalClose = document.querySelector('.modal-close');
+        <form id="paymentForm" class="glass-card">
+            <div id="step1">
+                <h2><i class="fas fa-wallet"></i> Payment Details</h2>
+                
+                <div class="input-group">
+                    <label for="name">Your Name</label>
+                    <input type="text" id="name" name="Name" placeholder="e.g. Rahul Kumar" autocomplete="name">
+                </div>
 
-        payNowButton.addEventListener('click', () => {
-            if (validateForm()) {
-                const enteredName = nameInput.value;
-                const enteredAmount = amountInput.value;
-                const enteredNote = noteInput.value;
+                <div class="input-group">
+                    <label for="amountToPay">Amount (₹)</label>
+                    <input type="number" id="amountToPay" name="Amount To Pay" placeholder="0.00" required>
+                    <div class="error-message" id="amountErrorMessage"></div>
+                </div>
 
-                // Construct the payment link
-                const paymentLink = `upi://pay?pa=aryan9356@ybl&am=${enteredAmount}&tn=Paid by ${enteredName} with note ${enteredNote}`;
+                <div class="input-group">
+                    <label for="note">Note (Optional)</label>
+                    <textarea id="note" name="Note" placeholder="e.g. Bill split, Rent, etc."></textarea>
+                </div>
 
-                // Redirect the user to the payment link
-                window.location.href = paymentLink;
-            }
-        });
+                <input type="hidden" id="Status" name="Status" value="Pending">
+                
+                <button id="submit" type="submit" class="btn-primary">
+                    Proceed to Pay <i class="fas fa-arrow-right"></i>
+                </button>
+                <p class="security-note"><i class="fas fa-lock"></i> Secure Connection</p>
+            </div>
+        </form>
 
-        showQRButton.addEventListener('click', () => {
-            if (validateForm()) {
-                const enteredName = nameInput.value;
-                const enteredAmount = amountInput.value;
-                const enteredNote = noteInput.value;
+        <div id="step2" class="glass-card hidden">
+            <div class="success-header">
+                <i class="fas fa-check-circle"></i>
+                <h3>Details Recorded</h3>
+                <p class="amount-display" id="paymentAmountDisplay">₹0</p>
+            </div>
 
-                // Construct the payment link
-                const paymentLink = `upi://pay?pa=aryan9356@ybl&am=${enteredAmount}&tn=Paid by ${enteredName} with note ${enteredNote}`;
+            <div id="paymentOptions">
+                <p class="instruction">Select an app to pay:</p>
+                
+                <div class="app-grid">
+                    <div class="app-item" onclick="openUPILink('tez://upi/')">
+                        <img src="./gpay.svg" alt="GPay" onerror="this.src='https://placehold.co/50x50?text=GPay'">
+                        <span>GPay</span>
+                    </div>
+                    <div class="app-item" onclick="openUPILink('phonepe://')">
+                        <img src="./phonepe.svg" alt="PhonePe" onerror="this.src='https://placehold.co/50x50?text=PhPe'">
+                        <span>PhonePe</span>
+                    </div>
+                    <div class="app-item" onclick="openUPILink('paytmmp://')">
+                        <img src="./paytm.svg" alt="Paytm" onerror="this.src='https://placehold.co/50x50?text=Paytm'">
+                        <span>Paytm</span>
+                    </div>
+                    <div class="app-item" onclick="openUPILink('bhim://upi/')">
+                        <img src="./bhim.svg" alt="BHIM" onerror="this.src='https://placehold.co/50x50?text=BHIM'">
+                        <span>BHIM</span>
+                    </div>
+                    <div class="app-item" onclick="openUPILink('cred://upi/')">
+                        <img src="./cred.svg" alt="CRED" onerror="this.src='https://placehold.co/50x50?text=CRED'">
+                        <span>CRED</span>
+                    </div>
+                    <div class="app-item" onclick="openUPILink('amazonpay://')">
+                        <img src="./amazonpay.svg" alt="Amazon" onerror="this.src='https://placehold.co/50x50?text=Amz'">
+                        <span>Amazon</span>
+                    </div>
+                    <div class="app-item" onclick="openUPILink('whatsapp://pay')">
+                        <img src="./whatsapp.svg" alt="WhatsApp" onerror="this.src='https://placehold.co/50x50?text=WA'">
+                        <span>WhatsApp</span>
+                    </div>
+                    <div class="app-item" onclick="openUPILink('payzapp://upi/')">
+                        <img src="./payzapp.png" alt="PayZapp" onerror="this.src='https://placehold.co/50x50?text=PZ'">
+                        <span>PayZapp</span>
+                    </div>
+                </div>
 
-                // Construct the QR code
-                const paymentQR = `https://quickchart.io/qr?text=${encodeURIComponent(paymentLink)}`;
+                <div class="action-buttons">
+                    <button type="button" class="btn-secondary" onclick="openUPILink('upi://')">
+                        Other Apps
+                    </button>
+                    <button type="button" class="btn-outline" id="showQRButton">
+                        <i class="fas fa-qrcode"></i> Show QR
+                    </button>
+                </div>
 
-                // Set the src attribute of the QR code image
-                document.getElementById('paymentQRCode').src = paymentQR;
+                <div id="showQR" class="qr-section hidden">
+                    <div class="qr-container">
+                        <img id="paymentQRCode" src="" alt="Scan to Pay">
+                    </div>
+                    <p>Scan with any UPI App</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                // Set the payment amount in the modal
-                document.getElementById('paymentAmount').textContent = `Amount: ${enteredAmount}`;
-
-                // Show the modal
-                qrCodeModal.style.display = 'block';
-            }
-        });
-
-        modalClose.addEventListener('click', () => {
-            qrCodeModal.style.display = 'none';
-        });
-
-        window.addEventListener('click', (event) => {
-            if (event.target == qrCodeModal) {
-                qrCodeModal.style.display = 'none';
-            }
-        });
-
-        function validateForm() {
-            if (nameInput.checkValidity() && amountInput.checkValidity() && noteInput.checkValidity()) {
-                return true;
-            } else {
-                alert("Please fill in all required fields.");
-                return false;
-            }
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
