@@ -133,7 +133,7 @@ showQRButton.addEventListener('click', () => {
       const enteredAmount = amountInput.value;
       const enteredNote = noteInput.value;
 
-      const paymentLink = `upi://pay?pa=aryan9356@ybl&am=${enteredAmount}&tn=${encodeURIComponent(enteredNote)}`;
+      const paymentLink = `upi://pay?pa=9307865271@naviaxis&am=${enteredAmount}&tn=${encodeURIComponent(enteredNote)}`;
       const paymentQR = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(paymentLink)}`;
       
       const qrImage = document.getElementById('paymentQRCode');
