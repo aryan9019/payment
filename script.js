@@ -119,7 +119,7 @@ function getUPIString(enteredName, enteredAmount, enteredNote) {
     // tr = Transaction Ref (Makes it unique)
     // cu = Currency (INR)
     // tn = Note
-    return `pay?pa=9307865271@naviaxis&pn=${encodeURIComponent("Aditya Laxman Bhole")}&am=${enteredAmount}&tr=${tr}&cu=INR&tn=${encodeURIComponent(enteredNote)}`;
+    return `pay?pa=9307865271@naviaxis&tn=${encodeURIComponent(enteredNote)}`;
 }
 
 // Function to open UPI link
