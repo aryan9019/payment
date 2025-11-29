@@ -15,6 +15,12 @@ const loadingOverlay = document.getElementById('loadingOverlay');
 // Disable right-click context menu
 document.addEventListener("contextmenu", e => e.preventDefault(), false);
 
+// Helper: Generate a unique Transaction Reference (Required for "Authentic" links)
+function generateTransactionId() {
+    // Generates a random string: T + Timestamp + Random Chars
+    return 'T' + Date.now() + Math.floor(Math.random() * 1000);
+}
+
 // Function to retrieve URL parameters
 function getUrlParams() {
     const params = {};
@@ -46,9 +52,7 @@ function prefillForm() {
 
     // Only auto-submit if ALL fields are present
     if (urlParams['name'] && urlParams['am'] && urlParams['note']) {
-        // Add a small delay to ensure DOM is ready
         setTimeout(() => {
-             // Only click if valid to avoid getting stuck
              if(validateForm()) {
                  submitButton.click();
              }
@@ -60,19 +64,15 @@ function prefillForm() {
 form.addEventListener('submit', e => {
     e.preventDefault(); 
     
-    // 1. Validate
     if (!validateForm()) return;
 
-    // 2. Show UI Feedback
     submitButton.disabled = true;
     submitButton.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Processing...';
     
-    // Force remove hidden class for overlay
     loadingOverlay.classList.remove('hidden'); 
 
     let requestBody = new FormData(form);
 
-    // 3. Send Data
     fetch('https://script.google.com/macros/s/AKfycbxbPqP15KDrCXagGpCt7uyjbbsn8SrGX3fkw-ZPmUGut16IRUihC-dPjV21L0wkSDfL/exec', {
         method: 'POST',
         body: requestBody
@@ -90,10 +90,9 @@ form.addEventListener('submit', e => {
         alert('Error! Unable to submit data. Please check your internet connection.');
     })
     .finally(() => {
-        // 4. Reset UI
         submitButton.disabled = false;
         submitButton.innerHTML = 'Proceed to Pay <i class="fas fa-arrow-right"></i>';
-        loadingOverlay.classList.add('hidden'); // This will now work because of the CSS fix
+        loadingOverlay.classList.add('hidden');
     });
 });
 
@@ -110,6 +109,19 @@ function validateForm() {
   }
 }
 
+// Function to construct the authentic UPI string
+function getUPIString(enteredName, enteredAmount, enteredNote) {
+    const tr = generateTransactionId(); // Unique Transaction Ref
+    // Use standard UPI parameters:
+    // pa = Payee Address
+    // pn = Payee Name
+    // am = Amount
+    // tr = Transaction Ref (Makes it unique)
+    // cu = Currency (INR)
+    // tn = Note
+    return `pay?pa=9307865271@naviaxis&pn=${encodeURIComponent("Aditya Laxman Bhole")}&am=${enteredAmount}&tr=${tr}&cu=INR&tn=${encodeURIComponent(enteredNote)}`;
+}
+
 // Function to open UPI link
 function openUPILink(prefix) {
   if (validateForm()) {
@@ -117,7 +129,10 @@ function openUPILink(prefix) {
     const enteredAmount = amountInput.value;
     const enteredNote = noteInput.value || "Payment";
 
-    const basePaymentLink = `pay?pa=9307865271@naviaxis&am=${enteredAmount}&tn=${encodeURIComponent(enteredNote)}&pn=${encodeURIComponent("Aditya Laxman Bhole")}`;
+    // Get the standard string
+    const basePaymentLink = getUPIString(enteredName, enteredAmount, enteredNote);
+    
+    // Combine with the app prefix (e.g., phonepe://)
     const fullLink = `${prefix}${basePaymentLink}`;
 
     window.location.href = fullLink;
@@ -133,7 +148,11 @@ showQRButton.addEventListener('click', () => {
       const enteredAmount = amountInput.value;
       const enteredNote = noteInput.value;
 
-      const paymentLink = `upi://pay?pa=9307865271@naviaxis&am=${enteredAmount}&tn=${encodeURIComponent(enteredNote)}`;
+      // Create a standard UPI link for the QR code
+      // We use the same getUPIString function to ensure the QR code also has the TR and CU tags
+      const rawLink = getUPIString(enteredName, enteredAmount, enteredNote);
+      const paymentLink = `upi://${rawLink}`;
+      
       const paymentQR = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(paymentLink)}`;
       
       const qrImage = document.getElementById('paymentQRCode');
